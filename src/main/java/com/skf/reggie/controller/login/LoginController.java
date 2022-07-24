@@ -73,5 +73,4 @@ public class LoginController {
         httpServletRequest.getSession().removeAttribute("employee");
         return R.success("退出成功");
     }
-
 }

@@ -17,5 +17,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
 
-
+    @Override
+    public int addEmployee(Employee employee) {
+        int count = this.baseMapper.insert(employee);
+        log.info("EmployeeServiceImpl.addEmployee add: {}", count);
+        return count;
+    }
 }
