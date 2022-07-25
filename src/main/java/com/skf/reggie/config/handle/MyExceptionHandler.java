@@ -23,7 +23,7 @@ public class MyExceptionHandler {
     public R<String> exceptionHandler(SQLIntegrityConstraintViolationException ex) {
         log.error(ex.getMessage());
         if (ex.getMessage().contains("Duplicate entry")) {
-            return R.error("该用户名已存在");
+            return R.error(ex.getMessage().split(" ")[2].replace("'" , "") + "已存在");
         }
         return R.error("未知错误");
     }
