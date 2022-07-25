@@ -27,6 +27,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
         this.setFieldValByName("createUser", request.getSession().getAttribute("employee"), metaObject);
         this.setFieldValByName("updateUser", request.getSession().getAttribute("employee"), metaObject);
+        this.setFieldValByName("isDeleted", 0, metaObject);
     }
 
     @Override
