@@ -173,6 +173,8 @@
               if (String(res.code) === '1') {
                 this.tableData = res.data.records || []
                 this.counts = res.data.total
+              } else {
+                this.$message.error(res.msg)
               }
             }).catch(err => {
               this.$message.error('请求出错了：' + err)

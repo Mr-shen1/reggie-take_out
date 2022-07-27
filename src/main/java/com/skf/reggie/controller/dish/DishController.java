@@ -127,4 +127,18 @@ public class DishController {
         }
         return R.success("");
     }
+
+    @GetMapping("list")
+    public R listDishByCategory(@RequestParam(value = "categoryId",required = false) Long categoryId,
+                                @RequestParam(value = "name",required = false) String name) {
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isEmpty(name)) {
+            queryWrapper.eq(Dish::getCategoryId, categoryId);
+        } else {
+            queryWrapper.eq(Dish::getName, name);
+        }
+        queryWrapper.eq(Dish::getStatus, "1");
+        List<Dish> list = dishService.list(queryWrapper);
+        return R.success(list);
+    }
 }
