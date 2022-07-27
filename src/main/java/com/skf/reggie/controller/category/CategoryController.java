@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * desc:
  *
@@ -64,5 +66,14 @@ public class CategoryController {
         } else {
             return R.error("修改分类失败");
         }
+    }
+
+    @GetMapping("/list")
+    public R<List<Category>> getType(@RequestParam("type") Integer type) {
+        log.info("getType() called with parameters => 【type = {}】", type);
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getType, type);
+        List<Category> categories = categoryService.list(queryWrapper);
+        return R.success(categories);
     }
 }
