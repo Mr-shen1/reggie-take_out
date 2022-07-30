@@ -1,5 +1,6 @@
 package com.skf.reggie.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.skf.reggie.dto.SetmealDto;
 import com.skf.reggie.entity.Setmeal;
@@ -36,6 +37,25 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         Long setmealId = setmeal.getId();
         List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
         setmealDishes.forEach(e -> e.setSetmealId(setmealId));
+        setmealDishService.saveBatch(setmealDishes);
+    }
+
+    @Override
+    @Transactional
+    public void editSetmeal(SetmealDto setmealDto) {
+        // 修改Setmeal
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDto, setmeal);
+        baseMapper.updateById(setmeal);
+        // 修改SetmealDish
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+        setmealDishes.forEach(e -> {
+            LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SetmealDish::getSetmealId, setmealDto.getId());
+            setmealDishService.remove(queryWrapper);
+            e.setSetmealId(setmealDto.getId());
+
+        });
         setmealDishService.saveBatch(setmealDishes);
     }
 }

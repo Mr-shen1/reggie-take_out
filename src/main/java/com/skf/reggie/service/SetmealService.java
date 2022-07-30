@@ -13,4 +13,6 @@ import com.skf.reggie.entity.Setmeal;
 public interface SetmealService extends IService<Setmeal> {
 
     void addSetmeal(SetmealDto setmealDto);
+
+    void editSetmeal(SetmealDto setmealDto);
 }

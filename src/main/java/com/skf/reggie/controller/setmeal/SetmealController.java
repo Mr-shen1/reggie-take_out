@@ -7,7 +7,9 @@ import com.skf.reggie.common.R;
 import com.skf.reggie.dto.SetmealDto;
 import com.skf.reggie.entity.Category;
 import com.skf.reggie.entity.Setmeal;
+import com.skf.reggie.entity.SetmealDish;
 import com.skf.reggie.service.CategoryService;
+import com.skf.reggie.service.SetmealDishService;
 import com.skf.reggie.service.SetmealService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -33,6 +35,9 @@ public class SetmealController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SetmealDishService setmealDishService;
 
     @PostMapping
     public R addSetmeal(@RequestBody SetmealDto setmealDto) {
@@ -94,13 +99,23 @@ public class SetmealController {
         return R.success("");
     }
 
-    @DeleteMapping()
-    public R deleteDish(@RequestParam("ids") List<Long> ids) {
-        if (!CollectionUtils.isEmpty(ids) && ids.size() == 1) {
-            setmealService.removeById(ids.get(0));
-        } else {
-            ids.forEach(e -> setmealService.removeByIds(ids));
-        }
-        return R.success("");
+    @GetMapping("/{id}")
+    public R listDishByCategory(@PathVariable("id") Long id) {
+        Setmeal setmeal = setmealService.getById(id);
+        SetmealDto setmealDto = new SetmealDto();
+        BeanUtils.copyProperties(setmeal, setmealDto);
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, id);
+        List<SetmealDish> setmealDishes = setmealDishService.list(queryWrapper);
+        setmealDto.setSetmealDishes(setmealDishes);
+
+        return R.success(setmealDto);
+    }
+
+
+    @PutMapping()
+    public R editSetmeal(@RequestBody SetmealDto setmealDto) {
+        setmealService.editSetmeal(setmealDto);
+        return R.success(setmealDto);
     }
 }
