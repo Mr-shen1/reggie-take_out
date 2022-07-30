@@ -32,7 +32,14 @@ public class LoginCheckFilter implements Filter {
         String requestURI = request.getRequestURI();
         log.info("拦截到请求 {}", requestURI);
         // 定义不需要处理的请求路径
-        String[] urls = {"/employee/login", "/employee/logout", "/backend/**", "/front/**", "/common/**"};
+        String[] urls = {"" +
+                "/employee/login",
+                "/employee/logout",
+                "/backend/**",
+                "/front/**",
+                "/common/**",
+                "/user/sendMsg",
+                "/user/login"};
         // 2. 判断本次请求是否需要处理
         boolean flag = checkUri(urls, requestURI);
         // 3. 如果不需要处理，直接放行
@@ -41,9 +48,15 @@ public class LoginCheckFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
-        // 4. 判定登录状态，如果已登录，则放行
+        // 4-1. 判定登录状态，如果已登录，则放行
         if (Objects.nonNull(request.getSession().getAttribute("employee"))) {
             log.info("用户已登录, 用户id为:{}", request.getSession().getAttribute("employee"));
+            filterChain.doFilter(request, response);
+            return;
+        }
+        // 4-2. 判定登录状态，如果已登录，则放行
+        if (Objects.nonNull(request.getSession().getAttribute("user"))) {
+            log.info("用户已登录, 用户id为:{}", request.getSession().getAttribute("user"));
             filterChain.doFilter(request, response);
             return;
         }
